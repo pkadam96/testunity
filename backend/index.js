@@ -6,6 +6,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const port = process.env.PORT || 4000;
+
 app.get('/', (req, res) => {
     res.send("Server is running!");
 });
@@ -55,7 +57,6 @@ app.post('/capture-requests', async (req, res) => {
     res.json(result);
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
