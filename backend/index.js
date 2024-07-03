@@ -3,10 +3,10 @@ const puppeteer = require('puppeteer');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:5173' })); 
 app.use(express.json());
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
     res.send("Server is running!");
@@ -31,11 +31,11 @@ app.post('/capture-requests', async (req, res) => {
         const requestHeader = request.headers();
         const request_url = request.url();
         const response_status = response.status();
-        const response_type = response.headers()['content-type']; 
-        const response_size = (await response.buffer()).length; 
+        const response_type = response.headers()['content-type'];
+        const response_size = (await response.buffer()).length;
         const request_method = request.method();
-        const remote_address = `${request.url().split('/')[2]}`; 
-       
+        const remote_address = `${request.url().split('/')[2]}`;
+
         result.push({
             request_url,
             request_method,
@@ -43,7 +43,7 @@ app.post('/capture-requests', async (req, res) => {
             response_type,
             response_size,
             remote_address,
-            requestHeader,          
+            requestHeader,
             responseHeader
         });
     });
