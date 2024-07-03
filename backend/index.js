@@ -6,13 +6,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT;
 
 app.get('/', (req, res) => {
     res.send("Server is running!");
 });
 
-app.post('/capture-requests', async (req, res) => {
+app.post('/requests', async (req, res) => {
     const { url } = req.body;
     const result = [];
 
