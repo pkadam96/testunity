@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     res.send("Server is running!");
 });
 
-app.post('/requests', async (req, res) => {
+app.post('/capture-requests', async (req, res) => {
     const { url } = req.body;
     const result = [];
 
