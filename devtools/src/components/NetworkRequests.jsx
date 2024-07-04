@@ -42,7 +42,7 @@ const NetworkRequests = () => {
     setFilteredRequests([]);
     setLoading(true); 
     try {
-      const response = await axios.post('http://localhost:4000/capture-requests', { url });
+      const response = await axios.post('https://testunity-8.onrender.com/capture-requests', { url });
       setRequests(response.data);
       console.log(response.data);
     } 
