@@ -4,7 +4,8 @@ This project is a replica of the network monitoring functionalities of Google Ch
 
 ## Demo
 
-You can view a live demo of the project at [Deployed Link](https://devtools-beta.vercel.app/).
+Frontend deployed link is [Here](https://devtools-beta.vercel.app/).
+Backend deployed link is [Here](https://testunity-4.onrender.com/).
 
 ## Features
 
