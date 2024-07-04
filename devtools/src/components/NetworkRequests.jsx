@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const NetworkRequests = () => {
-
+function NetworkRequests() {
   const [url, setUrl] = useState('');
   const [requests, setRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -23,7 +22,7 @@ const NetworkRequests = () => {
         setFilteredRequests(filtered);
       } 
       else {
-        const filtered = requests.filter((request) => {
+        const filtered = requests.filter(request => {
           return request.request_url.toLowerCase().includes(filter.toLowerCase());
         });
         setFilteredRequests(filtered);
@@ -39,10 +38,9 @@ const NetworkRequests = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFilteredRequests([]);
     setLoading(true); 
     try {
-      const response = await axios.post('https://testunity-8.onrender.com/capture-requests', { url });
+      const response = await axios.post('http://localhost:8200/capture-requests', { url });
       setRequests(response.data);
       console.log(response.data);
     } 
@@ -78,11 +76,16 @@ const NetworkRequests = () => {
           <li>Memory</li>
           <li>Application</li>
           <li>Lighthouse</li>
+          <li></li>
         </ul>
         <div className='input'>
           <form onSubmit={handleSubmit}>
-            <input type="text" value={url} onChange={handleChange} 
-            placeholder="Enter URL" />
+            <input
+              type="text"
+              value={url}
+              onChange={handleChange}
+              placeholder="Enter URL"
+            />
             <button type="submit">Submit</button>
           </form>
           <div>
@@ -98,12 +101,9 @@ const NetworkRequests = () => {
       </div>
       <div className='main'>
         {loading ? (
-          <p>Loading...</p>
+          <p className='initial-message'>Loading...</p>
         ) : filteredRequests.length === 0 ? (
-          <p className='initial-message'>
-            Recording network activity... <br /> 
-            Perform a request or hit <b>Ctrl + R  </b> to record the reload. <br /> <u>Learn more</u>
-          </p>
+          <p className='initial-message'>Recording network activity... <br /> Perform a request or hit <b>Ctrl + R  </b> to record the reload. <br /> <u>Learn more</u></p>
         ) : (
           <table className="requests-table">
             <thead>
@@ -128,16 +128,15 @@ const NetworkRequests = () => {
         )}
       </div>
 
+      {/* Modal for displaying request details  */}
       {selectedRequest && (
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={closeDetailsModal}>&times;</span>
             <h2>Headers</h2>
+            <h3>General</h3>
             <table className="header-table">
               <tbody>
-                <tr colSpan="2">
-                  <td><h3>General</h3></td>
-                </tr>
                 <tr>
                   <td>Request URL</td>
                   <td>:  {selectedRequest.request_url}</td>
@@ -154,18 +153,24 @@ const NetworkRequests = () => {
                   <td>Remote Address</td>
                   <td>:  {selectedRequest.remote_address}</td>
                 </tr>
-                <tr colSpan="2">
-                  <td><h3>Request Headers</h3></td>
-                </tr>
+              </tbody>
+            </table>
+
+            <h3>Request Headers</h3>
+            <table className="header-table">
+              <tbody>
                 {Object.entries(selectedRequest.requestHeader).map(([key, value]) => (
                   <tr key={key}>
                     <td>{key}</td>
                     <td>:  {value}</td>
                   </tr>
                 ))}
-                <tr colSpan="2">
-                  <td><h3>Response Headers</h3></td>
-                </tr>
+              </tbody>
+            </table>
+
+            <h3>Response Headers</h3>
+            <table className="header-table">
+              <tbody>
                 {Object.entries(selectedRequest.responseHeader).map(([key, value]) => (
                   <tr key={key}>
                     <td>{key}:</td>
@@ -181,4 +186,4 @@ const NetworkRequests = () => {
   );
 }
 
-export {NetworkRequests}
+export {NetworkRequests};
