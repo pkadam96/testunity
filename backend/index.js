@@ -1,9 +1,10 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT;
 
 const allowedOrigins = ['http://localhost:5173', 'https://devtools-beta.vercel.app'];
 
