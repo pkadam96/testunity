@@ -5,8 +5,16 @@ const cors = require('cors');
 const app = express();
 const port = 4000;
 
+const allowedOrigins = ['http://localhost:5173', 'https://devtools-beta.vercel.app'];
+
 const corsOptions = {
-    origin: 'http://localhost:5173', 
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -23,9 +31,14 @@ app.post('/capture-requests', async (req, res) => {
     const result = [];
 
     try {
-        const browser = await puppeteer.launch();
+        console.log('Launching Puppeteer...');
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
         const page = await browser.newPage();
-
+        
+        console.log(`Navigating to ${url}...`);
         await page.setRequestInterception(true);
 
         page.on('request', request => {
@@ -56,9 +69,9 @@ app.post('/capture-requests', async (req, res) => {
         });
 
         await page.goto(url, { waitUntil: 'networkidle0' });
-
         await browser.close();
 
+        console.log('Puppeteer process completed.');
         res.json(result);
     } catch (error) {
         console.error('Error capturing requests:', error);
